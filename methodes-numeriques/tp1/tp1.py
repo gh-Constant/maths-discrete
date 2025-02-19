@@ -1,3 +1,4 @@
+import math
 
 # ----- Question 1 : u1 -----
 
@@ -7,7 +8,11 @@ printu1 = {
    "print3": False,
    "print4": False,
    "print5": False,
-   "print6": True,
+   "print6": False,
+   "print7": False,
+   "print8": True,
+   "print9": False, 
+   "print10": False,
 }
 
 def u1_iteratif(n):
@@ -93,6 +98,22 @@ def u3_recursif(n):
       return 1
    return u3_fainter(n)[1]
 
+def uv_iteratif(n):
+   u,v = 1000000000,1
+   if n == 0:
+      return u,v
+   for i in range(n):
+      lastu = u
+      u = (lastu + v) / 2
+      v = 2*lastu*v/(lastu+v)
+   return u,v
+
+def uv_recursif(n):
+   if n == 0:
+      return 2,1
+   else:
+      u,v = uv_recursif(n-1)
+      return (u+v)/2, 2*u*v/(u+v)
 
 if printu1["print4"] == True:
     # Test de la valeur initiale
@@ -117,7 +138,7 @@ if printu1["print4"] == True:
     # Rang  6  :  8
     # Rang  7  :  13
 
-    print(u2_recursif(3))
+    print(u2_recursif(2))
 
 if printu1["print5"] == True:
    
@@ -130,10 +151,37 @@ if printu1["print6"] == True:
     for i in range(0, 8):
         print("Rang ", i, " : ", u3_iteratif(i))
 
-    for i in range(0, 8):
+    for i in range(0, 800):
         print("Rang ", i, " : ", u3_recursif(i))
 
-    
+if printu1["print7"] == True:
 
-  
-    
+    for i in range(0, 100):
+        print("Rang ", i, " : ", uv_iteratif(i))
+
+    # Rang  0  :  (2, 1)
+    # Rang  1  :  (1.5, 1.3333333333333333)
+    # Rang  2  :  (1.4166666666666665, 1.411764705882353)
+
+    for i in range(0, 100):
+      print("Rang ", i, " : ", uv_recursif(i))
+
+
+    # Rang  0  :  (2, 1)
+    # Rang  1  :  (1.5, 1.3333333333333333)
+    # Rang  2  :  (1.4166666666666665, 1.411764705882353)
+
+    # On constate que le u est strictement décroissant et le v est strictement croissant et ils convergent vers la même valeur au 5eme terme
+
+    #https://fr.wikipedia.org/wiki/Algorithme_de_calcul_de_la_racine_n-i%C3%A8me
+
+if printu1["print8"] == True:
+   
+   # Converge vers le nombre d'or aprés 40 itérations
+
+   for i in range(0, 100):
+      if i == 0:
+         print("0")
+      else:
+         print("Rang ", i, " : ", u3_iteratif(i+1) / u3_iteratif(i))
+
