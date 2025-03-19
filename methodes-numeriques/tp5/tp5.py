@@ -2,7 +2,7 @@ from math import *
 import matplotlib.pyplot as plt
 import numpy as np
 
-def f(x):
+def funcF(x):
     return x**5 - 3*x**4 + 2*x**3 + 5*x**2 - 7*x + 2
 
 def g(x):
@@ -13,6 +13,35 @@ def h(x):
 
 def z(x):
     return exp(-(x - 5.456454)**2 / 2) + exp(-(x - 58.34523)**2 / 2)
+
+def find_zero(f, xmin, xmax):
+    compteur = 0
+    seuil = 0.000000000001
+    x = 0
+    
+    while xmax - xmin > seuil:
+        x = (xmax + xmin) / 2
+        compteur += 1
+        if np.sign(f(x)) == np.sign(f(xmin)):
+            xmin = x
+        else:
+            xmax = x
+    
+    return x
+
+
+
+def max(f, xmin, xmax):
+    def df(x):
+        h = 0.000000001
+        return (f(x + h) - f(x)) / h
+    x = find_zero(df, xmin, xmax)
+    return x, f(x)
+
+def test(x):
+    return x * (1 - x)    
+
+
 
 def affiche(f, xmin, xmax, pas):
 
@@ -38,34 +67,26 @@ def affiche(f, xmin, xmax, pas):
     plt.legend()
     plt.show()
 
-def test(x):
-    return (x**2)-2
+#def test(x):
+ #   return (x**2)-2
 
-def zero(f, xmin, xmax):
-    compteur = 0
-    seuil = 0.000000000001
-    x = 0
-    
-    while xmax - xmin > seuil:
-        x = (xmax + xmin) / 2
-        compteur += 1
-        if np.sign(f(x)) == np.sign(f(xmin)):
-            xmin = x
-        else:
-            xmax = x
-    
-    return x,compteur
 
-t,b = zero(f, -5, 0)
-t2,b2 = zero(f, 0, 0.75)
-t3,b3 = zero(f, 0.75, 1.5)
-print(f(1))
 
-print(zero(f, -10, 10))
+# t,b = zero(f, -5, 0)
+# t2,b2 = zero(f, 0, 0.75)
+# t3,b3 = zero(f, 0.75, 1.5)
+# print(f(1))
 
-print(f"La première racine de f est approximativement {t} (trouvée en {b} itérations)")
-print(f"La deuxième racine de f est approximativement {t2} (trouvée en {b2} itérations)")
-print(f"La troisième racine de f est approximativement {t3} (trouvée en {b3} itérations)")
+print(max(funcF, -1.5, -0.5))
+print(max(funcF, 0, 1)) 
+print(max(funcF, 1.5, 2))
+
+# (-0.8794637798810072, 8.342244045234905) maximum
+# (0.6967907957396164, -0.31626933671486945) MINImum
+
+# print(f"La première racine de f est approximativement {t} (trouvée en {b} itérations)")
+# print(f"La deuxième racine de f est approximativement {t2} (trouvée en {b2} itérations)")
+# print(f"La troisième racine de f est approximativement {t3} (trouvée en {b3} itérations)")
 
 
 

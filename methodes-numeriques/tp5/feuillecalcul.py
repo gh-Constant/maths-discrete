@@ -1,27 +1,52 @@
+import numpy as np
 import matplotlib.pyplot as plt
-import random
-import math
-def u1_iteratif(n): # F
-  u = 2.56453
-  for i in range(n):
-    u = 0.9972 * u + 2123.56
-  return u
+from math import isinf, isnan
 
-def u2_iteratif(n):
-  u = 2.56453
-  for i in range(n):
-    u = 0.9972 * u + i ** 2
-  return u
+def find_zero(f, xmin, xmax):
+    compteur = 0
+    seuil = 0.000000000001
+    x = 0
+    
+    while xmax - xmin > seuil:
+        x = (xmax + xmin) / 2
+        compteur += 1
+        if np.sign(f(x)) == np.sign(f(xmin)):
+            xmin = x
+        else:
+            xmax = x
+    
+    return x
 
-def u3_iteratif(n):
-   if n == 0:
-      return 0
-   a,b = 0,1
-   for i in range(n-1):
-      c = a+b
-      a = b
-      b = c
-   return b
+def max(f, xmin, xmax):
+    def df(x):
+        h = 0.000000001
+        return (f(x + h) - f(x)) / h
+    x = find_zero(df, xmin, xmax)
+    return x, f(x)
+
+def affiche(f, xmin, xmax, pas):
+
+    x = np.arange(xmin, xmax, pas)
+    
+    y = []
+    for xi in x:
+        try:
+            yi = f(xi)
+            if not (isinf(yi) or isnan(yi)):  
+                y.append(yi)
+            else:
+                y.append(None)
+        except:
+            y.append(None)
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, y, 'b-', label=f.__name__)
+    plt.grid(True)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title(f'Graph of function {f.__name__}')
+    plt.legend()
+    plt.show()
 
 def graphique(suite, nmin, nmax, pas):
     
@@ -95,7 +120,6 @@ def graphique_multiple(suites, nmin, nmax, pas):
     
     plt.figure(figsize=(12, 8))
     
-    # Plot each suite with a different color
     for i, suite in enumerate(suites):
         y = [suite(n) for n in x]
         color = random_color()
@@ -111,46 +135,41 @@ def graphique_multiple(suites, nmin, nmax, pas):
     
     plt.show()
 
-def v(x):
-    return math.cos(x)
+def funcF(x):
+    return x * (1 - x)
 
-def w(x):
-    return -x**2 + 4
+def u2_iteratif(n):
+  u = 2.56453
+  for i in range(n):
+    u = 0.9972 * u + i ** 2
+  return u
 
-def z(x):
-    return 3 / (x**2 + 1)
+def f(x):
+  return 0.5 * x + 2123.56
 
-if __name__ == "__main__":
-    #graphique(u1_iteratif, 0, 12000, 150)   
-    # Le graphique suggère une divergence exponentielle
 
-    #graphique(u2_iteratif, 0, 30000, 600)
-    # Le graphique suggère une divergence quadratique
+def convergence(f, u0, rang, xmin, xmax, pas):
+    tabx = []
+    taby = []
+    x = xmin
+    while x < xmax:
+        tabx.append(x)
+        x += pas
+    plt.plot(tabx, tabx)
+    for x in tabx:
+        taby.append(f(x))
+    plt.plot(tabx, taby)
+    tabx = []
+    taby = []
+    u = u0
+    for i in range(rang):
+        tabx.append(u)
+        taby.append(f(u))
+        tabx.append(f(u))
+        taby.append(f(u))
+        u = f(u)
+    plt.plot(tabx, taby)
+    plt.grid()
+    plt.show()
 
-    #graphique(u3_iteratif, 0, 25, 1)
-    # Le graphique suggère une divergence exponentielle
-
-    #graphique_multiple([u1_iteratif, u2_iteratif, u3_iteratif], 0, 25, 1)  
-
-    #convergence(f, 4500, 50, 0, 10000, 100)  # Adjusted parameters for better visibility
-    # Si u0 est inférieur à 4247.12, la suite converge vers 4247.12 et est strictement croissante
-    # Si u0 est supérieur à 4247.12, la suite converge vers 4247.12 et est strictement décroissante
-
-    #convergence(v, 50, 200, 0, 1, 0.01)  # Modifié pour zoomer sur la zone d'intérêt
-    # Si v0 = 0,74 alors v converge vers 0,7390851332151607
-    # Sinon v converge en oscillant (oscillations)``
-
-    #convergence(w, 0.0, 3, -3, 3, 0.01)
-    # Si w0 = -1 + sqrt(17) / 2 alors w converge vers -1 + sqrt(17) / 2
-    # Sinon w converge vers 1.75 en oscillant
-
-    #convergence(z, 0, 100, 0, 10, 0.5)
-    # Si z0 = 1.2134 alors z est constante
-    # Sinon z converge vers 1.6 en oscillant, z se dirige vers un régime d'oscillations stables
-    
-    g = 0
-    for i in range(100):
-        g = z(g)
-    print(g)
-    
-    
+convergence(f, 0, 100, 0, 5000, 100)
